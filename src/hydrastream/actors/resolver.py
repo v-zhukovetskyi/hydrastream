@@ -1,5 +1,20 @@
-# Copyright (c) 2026 Valentin Zhukovetski
-# Licensed under the MIT License.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# HydraStream: "Concurrent HTTP downloader with in-memory stream reordering.".
+# Copyright (C) 2026 Valentyn Zhukovetskyi <zukovetski@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://gnu.org/licenses/>.
 
 import asyncio
 from abc import ABC, abstractmethod
@@ -9,7 +24,7 @@ from curl_cffi import Headers, Response
 from curl_cffi.requests import RequestsError
 
 from hydrastream.domain.base_actor import BaseActor, BaseActorKwargs, ErrorVerdict
-from hydrastream.domain.entities import Checksum, File, FileMeta, TypeHash
+from hydrastream.domain.entities import Checksum, File, FileMeta
 from hydrastream.domain.hydra_dataclass import hydra_dataclass
 from hydrastream.exceptions import GracefulShutdownError, LogStatus
 from hydrastream.interfaces import (
@@ -192,7 +207,7 @@ class BaseMetadataResolver(BaseActor[LinkData], ABC):
         total_size = int(headers.get("content-length", 0))
 
         accept_ranges = headers.get("accept-ranges", "").lower()
-        supports_ranges = (accept_ranges == "bytes") and (total_size > 0)
+        supports_ranges = bool(accept_ranges == "bytes") and (total_size > 0)
         filename = extract_filename(url, headers)
         return filename, total_size, supports_ranges
 
@@ -202,10 +217,10 @@ class BaseMetadataResolver(BaseActor[LinkData], ABC):
         id_: int,
         url: str,
         filename: str,
-        checksum_tuple: tuple[TypeHash, str] | None,
+        checksum_tuple: Checksum | None,
     ) -> Checksum | None:
         if checksum_tuple:
-            return Checksum(algorithm=checksum_tuple[0], value=checksum_tuple[1])
+            return checksum_tuple
         self.ui.add_file(id_, filename)
         try:
             checksum = await self.provider.resolve_hash(

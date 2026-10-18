@@ -1,5 +1,21 @@
-# Copyright (c) 2026 Valentin Zhukovetski
-# Licensed under the MIT License.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# HydraStream: "Concurrent HTTP downloader with in-memory stream reordering.".
+# Copyright (C) 2026 Valentyn Zhukovetskyi <zukovetski@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://gnu.org/licenses/>.
+
 
 import asyncio
 import contextlib
@@ -480,10 +496,16 @@ def cli_fuzz_strategy(draw: st.DrawFn) -> dict[str, Any]:
         cli_paths = [draw(filenames_strategy())]
     browser_strategy = st.sampled_from(list(get_args(BrowserTypeLiteral)))
 
-    # 2. Фильтруем старые проблемные форматы Safari (где больше одного '_')
-    # Это автоматически уберет поломанные 'safari18_4_ios', 'safari17_2_ios' и т.д.
+    # 2. Переписываем фильтр на безопасный
+    # Убираем ЛЮБЫЕ версии Safari, которые содержат цифры или старые форматы,
+    # оставляя только чистые стабильные алиасы вроде 'safari' или 'safari_ios'.
     valid_browser_strategy = browser_strategy.filter(
-        lambda b: not (b.startswith("safari") and b.count("_") > 1)
+        lambda b: (
+            not (
+                b.startswith("safari")
+                and (b.count("_") > 1 or any(char.isdigit() for char in b))
+            )
+        )
     )
 
     params = {

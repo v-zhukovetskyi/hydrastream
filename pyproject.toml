@@ -1,14 +1,11 @@
-# ==============================================================================
-# ОСНОВНЫЕ МЕТАДАННЫЕ ПРОЕКТА
-# Этот блок читает PyPI (pip) при установке пакета.
-# ==============================================================================
+
 [project]
 name = "hydrastream"
 version = "1.2.0"
-license = "MIT"
+license = "AGPL-3.0-or-later"
 description = "Concurrent HTTP downloader with in-memory stream reordering (curl_cffi + uvloop)."
 authors =[
-    { name = "Valentin Zhukovetski", email = "zukovetski@gmail.com" }
+    { name = "Valentyn Zhukovetskyi", email = "zukovetski@gmail.com" }
 ]
 
 # Теги для поиска на PyPI.
@@ -31,7 +28,6 @@ classifiers =[
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
@@ -71,9 +67,6 @@ dependencies = [
 ]
 
 
-# ==============================================================================
-# СИСТЕМА СБОРКИ
-# ==============================================================================
 [build-system]
 requires = ["maturin>=1.5,<2.0"]
 build-backend = "maturin"
@@ -88,9 +81,7 @@ module-name = "hydrastream.hydrastream_core"
 binding = "pyo3"
 stub-generation = true
 
-# ==============================================================================
-# ЗАВИСИМОСТИ ДЛЯ РАЗРАБОТКИ (НЕ идут в прод пользователю)
-# ==============================================================================
+
 [dependency-groups]
 dev =[
     "bandit>=1.9.4",       # Поиск уязвимостей в безопасности кода
@@ -110,9 +101,7 @@ dev =[
     "viztracer>=1.1.1",
 ]
 
-# ==============================================================================
-# CLI-КОМАНДЫ (ТОЧКИ ВХОДА)
-# ==============================================================================
+
 # Что пользователь пишет в консоли = "где лежит функция:имя переменной приложения"
 [project.scripts]
 hydrastream = "hydrastream.main:app"
@@ -125,9 +114,6 @@ Homepage = "https://github.com/Zhukovetski/HydraStream"
 Repository = "https://github.com/Zhukovetski/HydraStream"
 Issues = "https://github.com/Zhukovetski/HydraStream/issues"
 
-# ==============================================================================
-# НАСТРОЙКИ СБОРКИ (UV)
-# ==============================================================================
 # Динамически тянем версию из __init__.py, чтобы не менять её в двух местах руками
 
 [tool.uv]
@@ -135,6 +121,16 @@ package = true
 
 [tool.uv.sources]
 hydrastream = { workspace = true }
+
+[tool.ty]
+# Задаем целевую версию Python для анализа
+environment.python-version = "3.12"
+
+[tool.ty.rules]
+# Здесь вы можете управлять строгостью проверки типов (error, warn, ignore)
+all = "warn"                       # По умолчанию делать все предупреждениями
+unresolved-import = "error"        # Но если импорт не найден — жесткая ошибка
+invalid-assignment = "error"       # Ошибка при попытке положить не тот тип в переменную
 
 # ==============================================================================
 # НАСТРОЙКИ ЛИНТЕРА RUFF (Проверка качества кода)
@@ -217,9 +213,6 @@ max-branches = 12
 "src/hydrastream/main.py" = ["PLR0913"]
 "src/hydrastream/facade.py" = ["PLR0913"]
 
-# ==============================================================================
-# НАСТРОЙКИ ТИПИЗАЦИИ (PYRIGHT)
-# ==============================================================================
 [tool.pyright]
 include = ["src"]
 exclude = [
@@ -236,9 +229,7 @@ venvPath = "."
 venv = ".venv"
 # На время отладки снизьте строгость, чтобы увидеть, появятся ли подсказки
 typeCheckingMode = "strict"
-# ==============================================================================
-# НАСТРОЙКИ ТЕСТОВ (PYTEST)
-# ==============================================================================
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"                            # Автоматически понимать, что async def test_... это асинхронный тест
 asyncio_default_fixture_loop_scope = "function"  # Каждому тесту - свой свежий event loop
@@ -250,9 +241,7 @@ filterwarnings = [
     "ignore:chunk_size is ignored:UserWarning",
     "ignore:.*chunk_size is ignored.*",
 ]
-# ==============================================================================
-# НАСТРОЙКИ БЕЗОПАСНОСТИ (BANDIT)
-# ==============================================================================
+
 [tool.bandit]
 # Не ищем уязвимости в тестовых файлах (там часто используются хаки и assert'ы)
 exclude_dirs = ["tests", "features"]

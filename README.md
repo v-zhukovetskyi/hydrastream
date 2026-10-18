@@ -2,7 +2,6 @@
 
 [![PyPI version](https://badge.fury.io/py/hydrastream.svg)](https://pypi.org/project/hydrastream/)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverage: 78%](https://img.shields.io/badge/coverage-78%25-brightgreen.svg)](https://github.com/Zhukovetski/HydraStream)
 [![Tests](https://github.com/Zhukovetski/HydraStream/actions/workflows/tests.yml/badge.svg)](https://github.com/Zhukovetski/HydraStream/actions/workflows/tests.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/HydraStream/HydraStream)
@@ -153,4 +152,9 @@ Port the core engine to Rust (`tokio`/`reqwest`) with a `PyO3` wrapper to bypass
 
 ## License
 
-MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**.
+
+* Free for academic, research, and open-source use (including open-source network services).
+* If you wish to use this software in proprietary/closed-source commercial products or network services (SaaS) without AGPLv3 copyleft obligations, custom commercial licenses are available upon request.
+
+Contact: **Valentyn Zhukovetskyi** - [zukovetski@gmail.com](mailto:zukovetski@gmail.com)
